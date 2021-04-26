@@ -1,0 +1,11 @@
+.app {
+    padding-top: 50px;
+    margin: 0 auto;
+    max-width: 800px;
+    padding-bottom: 50px;
+  }
+
+  .search-pannel {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
