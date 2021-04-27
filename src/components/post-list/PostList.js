@@ -1,14 +1,21 @@
 import React from 'react';
 import PostListItem from '../post-list-item/PostListItem';
 import './PostList.css';
+import {ListGroup} from 'reactstrap';
 
-const PostList = () => {
+const PostList = ({posts, onDelete}) => {
+  
+  let postItem = posts.map( post => {
+    const {id, ...postProps} = post;
+    //console.log(id);
+    return (<PostListItem key={id} {...postProps} onDelete={() => onDelete(id)} />)
+  });
+  
+
   return (
-    <ul className = "app-list list-group">
-            <PostListItem/>
-            <PostListItem/>
-            <PostListItem/>
-    </ul>
+    <ListGroup className = "app-list">
+            {postItem}
+    </ListGroup>
   );
 }
 
