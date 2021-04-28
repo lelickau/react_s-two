@@ -8,15 +8,15 @@
 ### v1.1
 
 Подключение:
-    *node-sass
-    *styled-components
-    *reactstrap bootstrap
+* node-sass
+* styled-components
+* reactstrap bootstrap
 
 Реализация: 
-    *onClick:
-        [PostListItem]
-        onImportant -- добавление класса important (выделяет пост желтым)
-        onLike -- добавление класса like (добавляет сердце посту)
-        [App]
-        deleteItem -- удаление поста
-        addItem -- добавление поста (подготовка)
+* onClick:
+    - [PostListItem]
+        - onImportant -- добавление класса important (выделяет пост желтым)
+        - onLike -- добавление класса like (добавляет сердце посту)
+    - [App]
+        - deleteItem -- удаление поста
+        - addItem -- добавление поста (подготовка)

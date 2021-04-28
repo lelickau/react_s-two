@@ -17,18 +17,49 @@ const SearchPannelBlock = styled.div`
     margin-bottom: 15px;
     display: flex;
 `;
-
 export default class App extends Component {
 
   state = {
       data: [
-      {label: 'Теория - это хорошо, но без практики результата не будет.', important: true, id: 0, },
-      {label: 'JS - это язык интерактивности на веб-страницах.', important: false, id: 1, },
-      {label: 'Используя различные фрэймворки, JavaScript заполоняет интернет: серверная сторона (Node.js), мобильные приложения (React Native, Ionic), виртуальная реальность (React VR) и так далее.', important: false, id: 2, },
+      {label: 'Теория - это хорошо, но без практики результата не будет.', important: true, id: 0, like: false},
+      {label: 'JS - это язык интерактивности на веб-страницах.', important: false, id: 1, like: false},
+      {label: 'Используя различные фрэймворки, JavaScript заполоняет интернет: серверная сторона (Node.js), мобильные приложения (React Native, Ionic), виртуальная реальность (React VR) и так далее.', important: false, id: 2, like: true},
     ],
+    term: '',
+    filter: 'all',
   } 
 
-  maxId = 5;
+  filterPosts = (items, filter) => {
+    if (filter === 'like') {
+      return items.filter( item => item.like);
+    } else {
+      return items
+    }
+  }
+
+  onFilterSelect = (filter) => {
+    this.setState({filter})
+  }
+
+  onToggle = (id, toggle) => {
+    this.setState(({data}) => {
+      const index = data.findIndex((elem) => elem.id === id);
+      const old = data[index];
+      const newItem = {...old, [toggle]: !old[toggle]};
+      const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
+      return {
+        data: newArr
+      }
+    })
+  }
+  onToggleImportant = (id) => {
+      this.onToggle(id, "important");
+  }
+
+  onToggleLiked = (id) => {
+    this.onToggle(id, "like");
+  }
+
   
   deleteItem = (id) => {
     this.setState(({data}) => {
@@ -60,16 +91,48 @@ export default class App extends Component {
     })
   }
 
+  searchPost = (items, term) => {
+    if(term.length === 0) {
+      return items
+    }
+
+    return items.filter((item) => {
+      return item.label.indexOf(term) > -1
+    })
+  }
+
+  onUpdateSearch = (term) => {
+    this.setState({term})
+  }
+
   render() {
+    const {data, term, filter} = this.state;
+    const liked = data.filter(item => item.like).length;
+    const allPosts = data.length;
+
+    const visiblePosts = this.filterPosts(this.searchPost(data, term), filter);
       return (
       <AppBlock>
-        <AppHeader/>
+        <AppHeader 
+          liked={liked}
+          allPosts={allPosts}
+        />
         <SearchPannelBlock>
-          <SearchPannel/>
-          <PostStatusFilter/>
+          <SearchPannel
+            onUpdateSearch={this.onUpdateSearch}
+          />
+          <PostStatusFilter
+            filter={filter}
+            onFilterSelect={this.onFilterSelect}
+          />
         </SearchPannelBlock>
-        <PostList posts={this.state.data} onDelete={this.deleteItem} />
-        <PostAddForm addPost={this.addItem}/>
+        <PostList 
+          posts={visiblePosts} 
+          onDelete={this.deleteItem}
+          onToggleImportant={this.onToggleImportant}
+          onToggleLiked={this.onToggleLiked} />
+        <PostAddForm 
+          addPost={this.addItem} />
       </AppBlock>
     );
   }
